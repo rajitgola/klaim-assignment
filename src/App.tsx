@@ -4,6 +4,7 @@ import About from './pages/About/About';
 import Login from './pages/Auth/Login';
 import Home from './pages/Home/Home';
 import Profile from './pages/Profile/Profile';
+import 'antd/dist/reset.css';
 
 function App() {
   return (
