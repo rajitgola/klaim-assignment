@@ -10,6 +10,7 @@ const Login = () => {
     const navigate = useNavigate();
     
     const onSubmit = (values: ILoginRequest) => {
+        setUserToken("test token value") // Local Testing
         validateUser(values).then((res : IAPIResponse<{token : string}>) => {
             setUserToken(res.data.token);
             navigate("/profile");
