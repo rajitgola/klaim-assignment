@@ -1,12 +1,20 @@
-import { Button, Checkbox, Form, Input } from 'antd'
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import React from 'react';
-import "./Login.scss"
+import { Button, Form, Input } from 'antd';
+import { useNavigate } from 'react-router-dom';
+import { setUserToken, validateUser } from '../../services';
+import { IAPIResponse, ILoginRequest } from '../../shared/models';
+import "./Login.scss";
 
 const Login = () => {
 
-    const onFinish = (values: any) => {
-        console.log('Received values of form: ', values);
+    const navigate = useNavigate();
+    
+    const onSubmit = (values: ILoginRequest) => {
+        setUserToken("test token value") // Local Testing
+        validateUser(values).then((res : IAPIResponse<{token : string}>) => {
+            setUserToken(res.data.token);
+            navigate("/profile");
+        });
     };
 
     return (
@@ -20,7 +28,7 @@ const Login = () => {
                     name="normal_login"
                     className="login-form"
                     initialValues={{ remember: true }}
-                    onFinish={onFinish}>
+                    onFinish={onSubmit}>
                     <Form.Item
                         name="email"
                         rules={[{ required: true, message: 'Please input your email!' }]}>

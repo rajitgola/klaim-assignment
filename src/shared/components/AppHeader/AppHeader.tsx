@@ -2,18 +2,36 @@ import { Menu } from 'antd'
 import { Header } from 'antd/es/layout/layout'
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { IMenuItem } from '../../models';
+import { clearUserToken, isUserLoggedIn, logOutUser } from '../../../services';
+import { IAPIResponse, IMenuItem } from '../../models';
 
 const AppHeader = () => {
 
+  const doLogout = () => {
+    clearUserToken(); // for local testing
+    logOutUser().then((res : IAPIResponse<{}>) => {
+      clearUserToken();
+    });
+  }
+
   const DEFAULT_MENU_LIST : IMenuItem[]  = [
     {
-      title : "About",
-      route : "/about"
+      title : "Sign in",
+      route : "/sign-in",
+      isPublic : true,
+      actionMethod : null
     },
     {
-      title : "Sign in",
-      route : "/sign-in"
+      title : "Sign Out",
+      route : "/sign-out",
+      isPublic : false,
+      actionMethod : doLogout
+    },
+    {
+      title : "Profile",
+      route : "/profile",
+      isPublic : false,
+      actionMethod : null
     }
   ];
   const [menuItems, setMenuItems] = useState<IMenuItem[]>(DEFAULT_MENU_LIST);
@@ -26,6 +44,15 @@ const AppHeader = () => {
     setSelectedKey(menuItems.find(_item => location.pathname.startsWith(_item.route))?.route || "")
   }, [location]);
 
+  useEffect(() => {
+    isUserLoggedIn() && setMenuItems(prev=>prev.filter(x=> !x.isPublic));
+    !isUserLoggedIn() && setMenuItems(prev=>prev.filter(x=>x.isPublic));
+  }, []);
+
+  const onMenuAction = (menuItem : IMenuItem) => {
+    !menuItem.actionMethod && navigate(menuItem.route);
+    menuItem.actionMethod && menuItem.actionMethod()
+  }
 
   return (
     <Header style={{ position: 'sticky', top: 0, zIndex: 1, width: '100%' }}>
@@ -45,10 +72,11 @@ const AppHeader = () => {
         theme="dark"
         selectedKeys={[selectedKey]}
         mode="horizontal">
+          <Menu.Item key={"/about"} onClick={() => navigate("/about")}>About</Menu.Item>
           { menuItems.map((item, index) => {
             return (
                 <>
-                  <Menu.Item key={item.route} onClick={() => navigate(item.route)}>{item.title}</Menu.Item>
+                  <Menu.Item key={item.route} onClick={() => onMenuAction(item)}>{item.title}</Menu.Item>
                 </>
               )
             })

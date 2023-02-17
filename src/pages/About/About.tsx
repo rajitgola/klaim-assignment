@@ -1,8 +1,13 @@
-import React from 'react'
-
 const About = () =>  {
     return (
-        <div>About</div>
+        <section className="home-container">
+            <div className="title-container">
+                <h1 style={{fontSize : '2rem'}}> Company Info  </h1>
+                <div>
+                    Basic info about company.
+                </div>
+            </div>
+        </section>
     )
 }
 

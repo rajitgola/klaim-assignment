@@ -20,7 +20,7 @@ const Home = () =>  {
     return (
         <section className="home-container">
             <div className="title-container">
-                <h1 style={{fontSize : '2rem'}}> Company Info  </h1>
+                <h1 style={{fontSize : '2rem'}}> Company Home  </h1>
                 <div dangerouslySetInnerHTML={{__html : companyInfo}}>
                 </div>
             </div>
