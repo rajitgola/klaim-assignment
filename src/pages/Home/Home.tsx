@@ -1,13 +1,30 @@
-import { Button } from 'antd';
-import React from 'react';
+import { useEffect, useState } from 'react';
+import { getCompanyInfo } from '../../services';
+import { IAPIResponse } from '../../shared/models';
 import "./Home.scss";
 
 const Home = () =>  {
+
+    const [companyInfo, setCompanyInfo] = useState<string>("Some information about the <b>company</b>.");
+
+    useEffect(() => {
+      fetchCompanyInfo();
+    }, []);
+    
+    const fetchCompanyInfo = () => {
+        getCompanyInfo().then((res : IAPIResponse<{info : string}>) => {
+            setCompanyInfo(res.data.info);
+        });
+    }
+
     return (
-        <div>
-            <Button type="primary">Button</Button>
-            Home
-        </div>
+        <section className="home-container">
+            <div className="title-container">
+                <h1 style={{fontSize : '2rem'}}> Company Info  </h1>
+                <div dangerouslySetInnerHTML={{__html : companyInfo}}>
+                </div>
+            </div>
+        </section>
     )
 }
 
