@@ -1,0 +1,15 @@
+.home-container {
+    color: #fff;
+    background: linear-gradient(#5742EF,#55BECA);
+    text-align: center;
+    padding-bottom: 160px;
+    margin: 0 -50px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    overflow: hidden;
+    .title-container {
+        padding-top: 10rem;
+    }
+}
