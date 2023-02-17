@@ -1,1 +1,1 @@
-export const MESSAGE = "";
+export const USER_TOKEN_PREFIX : string = "TOKEN";

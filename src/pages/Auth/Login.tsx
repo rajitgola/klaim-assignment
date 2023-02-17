@@ -1,7 +1,8 @@
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Form, Input } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { ILoginRequest } from '../../shared/models';
+import { setUserToken, validateUser } from '../../services';
+import { IAPIResponse, ILoginRequest } from '../../shared/models';
 import "./Login.scss";
 
 const Login = () => {
@@ -9,8 +10,10 @@ const Login = () => {
     const navigate = useNavigate();
     
     const onSubmit = (values: ILoginRequest) => {
-        console.log('Received values of form: ', values);
-        navigate("/profile");
+        validateUser(values).then((res : IAPIResponse<{token : string}>) => {
+            setUserToken(res.data.token);
+            navigate("/profile");
+        });
     };
 
     return (
