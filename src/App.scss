@@ -6,3 +6,8 @@
   height: 40vmin;
   pointer-events: none;
 }
+
+.ant-layout-content.site-layout {
+  height: calc(100vh - 128px);
+  overflow: scroll;
+}

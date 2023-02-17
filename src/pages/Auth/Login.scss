@@ -1,0 +1,25 @@
+.login-container {
+    margin: 0 auto;
+    .login-form {
+        width: 25rem;
+        margin: 2rem auto;
+    }
+    .login-form-forgot {
+        float: right;
+    }
+    .ant-col-rtl .login-form-forgot {
+        float: left;
+    }
+    .login-form-button {
+        width: 100%;
+    }
+    
+    .login-head {
+        margin:  2rem 0 0rem 0;
+        text-align: center;
+    }
+
+    hr {
+        width: 100px;
+    }
+}
