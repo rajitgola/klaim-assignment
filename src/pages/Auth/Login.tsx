@@ -1,12 +1,16 @@
-import { Button, Checkbox, Form, Input } from 'antd'
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import React from 'react';
-import "./Login.scss"
+import { Button, Form, Input } from 'antd';
+import { useNavigate } from 'react-router-dom';
+import { ILoginRequest } from '../../shared/models';
+import "./Login.scss";
 
 const Login = () => {
 
-    const onFinish = (values: any) => {
+    const navigate = useNavigate();
+    
+    const onSubmit = (values: ILoginRequest) => {
         console.log('Received values of form: ', values);
+        navigate("/profile");
     };
 
     return (
@@ -20,7 +24,7 @@ const Login = () => {
                     name="normal_login"
                     className="login-form"
                     initialValues={{ remember: true }}
-                    onFinish={onFinish}>
+                    onFinish={onSubmit}>
                     <Form.Item
                         name="email"
                         rules={[{ required: true, message: 'Please input your email!' }]}>
