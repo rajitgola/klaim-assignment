@@ -1,21 +1,32 @@
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Form, Input } from 'antd';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { setUserToken, validateUser } from '../../services';
+import { clearUserToken, getUserToken, setUserToken, validateUser } from '../../services';
 import { IAPIResponse, ILoginRequest } from '../../shared/models';
 import "./Login.scss";
 
 const Login = () => {
 
     const navigate = useNavigate();
+    const [token, setToken] = useState<any>(getUserToken());
     
     const onSubmit = (values: ILoginRequest) => {
-        setUserToken("test token value") // Local Testing
+        setToken("test token value");
+        setTimeout(() => {
+            navigate("/profile");
+        }, 0);
         validateUser(values).then((res : IAPIResponse<{token : string}>) => {
-            setUserToken(res.data.token);
+            // setUserToken(res.data.token);
+            setToken("test token value")
             navigate("/profile");
         });
     };
+
+    useEffect(() => {
+        token && setUserToken(token);
+        !token && clearUserToken();
+    }, [token])
 
     return (
         <>

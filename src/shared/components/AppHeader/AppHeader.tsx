@@ -1,53 +1,69 @@
-import { Menu } from 'antd'
-import { Header } from 'antd/es/layout/layout'
-import React, { useEffect, useState } from 'react';
+import { Menu } from 'antd';
+import { Header } from 'antd/es/layout/layout';
+import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { clearUserToken, isUserLoggedIn, logOutUser } from '../../../services';
+import { clearUserToken, getUserToken, logOutUser } from '../../../services';
 import { IAPIResponse, IMenuItem } from '../../models';
 
 const AppHeader = () => {
 
   const doLogout = () => {
-    clearUserToken(); // for local testing
+    // clearUserToken(); // for local testing
+    setToken(null);
+    clearUserToken();
     logOutUser().then((res : IAPIResponse<{}>) => {
       clearUserToken();
     });
   }
 
-  const DEFAULT_MENU_LIST : IMenuItem[]  = [
+  const DEFAULT_MENU_LIST_PUBLIC : IMenuItem[]  = [
+    {
+      title : "About",
+      route : "/about",
+      actionMethod : null
+    },
     {
       title : "Sign in",
       route : "/sign-in",
-      isPublic : true,
+      actionMethod : null
+    }
+  ];
+
+  const DEFAULT_MENU_LIST_PRIVATE : IMenuItem[]  = [
+    {
+      title : "About",
+      route : "/about",
       actionMethod : null
     },
     {
       title : "Sign Out",
       route : "/sign-out",
-      isPublic : false,
       actionMethod : doLogout
     },
     {
       title : "Profile",
       route : "/profile",
-      isPublic : false,
       actionMethod : null
     }
   ];
-  const [menuItems, setMenuItems] = useState<IMenuItem[]>(DEFAULT_MENU_LIST);
+
+  const [menuItems, setMenuItems] = useState<IMenuItem[]>(DEFAULT_MENU_LIST_PUBLIC);
   const navigate = useNavigate();
 
   const location = useLocation();
   const [selectedKey, setSelectedKey] = useState(menuItems.find(_item => location.pathname.startsWith(_item.route))?.route || "")
 
   useEffect(() => {
+    setToken(getUserToken());
     setSelectedKey(menuItems.find(_item => location.pathname.startsWith(_item.route))?.route || "")
   }, [location]);
 
+  const [token, setToken] = useState<any>(getUserToken());
+
   useEffect(() => {
-    isUserLoggedIn() && setMenuItems(prev=>prev.filter(x=> !x.isPublic));
-    !isUserLoggedIn() && setMenuItems(prev=>prev.filter(x=>x.isPublic));
-  }, []);
+    token && setMenuItems(DEFAULT_MENU_LIST_PRIVATE);
+    !token && setMenuItems(DEFAULT_MENU_LIST_PUBLIC);
+  }, [token]);  
 
   const onMenuAction = (menuItem : IMenuItem) => {
     !menuItem.actionMethod && navigate(menuItem.route);
@@ -72,7 +88,6 @@ const AppHeader = () => {
         theme="dark"
         selectedKeys={[selectedKey]}
         mode="horizontal">
-          <Menu.Item key={"/about"} onClick={() => navigate("/about")}>About</Menu.Item>
           { menuItems.map((item, index) => {
             return (
                 <>
